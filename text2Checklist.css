@@ -1,0 +1,37 @@
+.txt2chkl .hidden {
+    display: none;
+}
+
+.txt2chkl .editor {
+    margin-bottom: 10px;
+    width: 100%;
+    max-height: 300px;
+    resize: vertical;
+}
+
+.txt2chkl .checklist {
+    margin-bottom: 10px;
+}
+
+.txt2chkl .description {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.txt2chkl .description:first-child {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.txt2chkl .entry {
+    margin-left: 10px;
+}
+
+.txt2chkl .actions > * {
+    margin-right: 5px;
+}
+
+.txt2chkl .link {
+    cursor: pointer;
+    text-transform: capitalcase;
+}
