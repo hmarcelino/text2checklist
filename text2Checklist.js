@@ -1,73 +1,102 @@
-(function($, window) {
+(function($) {
 
-    var pluginName = 'text2Checklist',
-        document = window.document;
+    var pluginName = 'text2Checklist';
 
     var defaults = {
-        canEdit: "true",
+        keepSync: true,
 
         buttons: {
             edit: "Edit",
-            save: "Ok",
-            cancel: "Cancel"
+            save: "Ok"
         },
 
         actions: {
             canEdit: true,
             canCheck: true
-        }
+        },
+
+        onChange: undefined
     };
 
     var _getUniqueId = function() {
         return "txt2chkl-" + Math.floor((Math.random() * 1000000));
-    }
+    };
 
     var _buildHtml = function(thisInstance, line, idx) {
         var html,
             label,
             uniqueId;
 
+        var applyBoldIfRequired = function(text){
+            // Don't capture the first '*' from a
+            // bold text inside a bullet point
+            //
+            // Ex: * *Bullet point 1*
+            //   should return * <strong>Bullet point 1</strong>
+            //
+            return text.replace(/\*([^\s].+)\*/, "<strong>$1</strong>");
+        };
+
+        line = applyBoldIfRequired(line);
+
+        // build checkboxes
         if (line.indexOf("-") === 0 || line.indexOf("+") === 0) {
             uniqueId = _getUniqueId();
             label = line.replace(/^[-+](\s*)/, "");
             html = [
                 "<div class='entry'>",
-                "   <input id='" + uniqueId + "' type='checkbox' data-idx='" + idx + "' "
-                        + (line.indexOf("+") === 0 ? "checked='checked'" : "")
-                        + (!thisInstance.options.actions["canCheck"] ? "disabled='disabled'" : "" )
-                        + "' >",
-                "   <label for='" + uniqueId + "'>" + label + "</label>",
+                "   <label for='" + uniqueId + "'>",
+                "       <input id='" + uniqueId + "' type='checkbox' data-idx='" + idx + "' "
+                + (line.indexOf("+") === 0 ? "checked='checked'" : "")
+                + (!thisInstance.options.actions["canCheck"] ? "disabled='disabled'" : "")
+                + "' >",
+                "     " + label + "",
+                "   </label>",
                 "</div>"
             ].join("");
 
+            // build bullet points
+        } else if (line.indexOf("*") === 0){
+            html = [
+                "<div class='entry'>",
+                "   <ul>",
+                "      <li> " + line.replace(/^[\*](\s*)/, "") + "</li>",
+                "   </ul>",
+                "</div>"
+            ].join("");
 
         } else {
             html = "<div class='description' data-idx='" + idx + "'>" + line + "</div>";
         }
 
         return html;
-    }
+    };
 
-    var _parseTextAndBuildHtml = function(thisInstance) {
+    var _parseTextAndSetHtml = function(thisInstance) {
         var $input = $(thisInstance.element),
-            textLines;
+            textLines,
+            checklistHtml;
 
         if ($input.val().length === 0) {
+            thisInstance.$checklist.addClass("hidden");
             return "";
+
+        }else {
+            textLines = $input.val().trim()
+                .replace(/\n|\r\n|\r/g, "<br>")
+                .replace(/<br>\s+/g, "<br>")
+                .split("<br>");
+
+            thisInstance.textLines = textLines;
+
+            checklistHtml = textLines.map(function(line, idx) {
+                return _buildHtml(thisInstance, line, idx);
+            }).join("");
+
+            thisInstance.$checklist.html(checklistHtml);
+            thisInstance.$checklist.removeClass("hidden");
         }
-
-        textLines = $input.val().trim()
-            .replace(/\n|\r\n|\r/g, "<br>")
-            .replace(/<br>\s+/g, "<br>")
-            .split("<br>");
-
-        thisInstance.textLines = textLines;
-
-        return textLines.map(function(line, idx) {
-            return _buildHtml(thisInstance, line, idx);
-        }).join("");
-
-    }
+    };
 
     var _editInPlace = function(thisInstance) {
         var initialHeight = parseInt(thisInstance.$container.css("height").replace(/px/, "")),
@@ -93,13 +122,13 @@
         if (thisInstance.$cancelLink.length === 1) {
             thisInstance.$cancelLink.removeClass("hidden");
         }
-    }
+
+        $input.focus();
+    };
 
     var _persistEditorChanges = function(thisInstance, onDone) {
-        var $input = $(thisInstance.element);
-
         thisInstance.$inputWrapper.removeAttr("data-prev-value");
-        thisInstance.$inputWrapper.addClass("hidden")
+        thisInstance.$inputWrapper.addClass("hidden");
         thisInstance.$checklist.html("");
 
         thisInstance.$checklist.removeClass("hidden");
@@ -111,11 +140,11 @@
         }
 
         onDone();
-    }
+    };
 
-    var _cancelEditorChanges = function(thisInstance, onDone) {
+    var _cancelEditorChanges = function(thisInstance) {
         thisInstance.$inputWrapper.removeAttr("data-prev-value");
-        thisInstance.$inputWrapper.addClass("hidden")
+        thisInstance.$inputWrapper.addClass("hidden");
 
         thisInstance.$checklist.removeClass("hidden");
         thisInstance.$editLink.removeClass("hidden");
@@ -124,12 +153,22 @@
         if (thisInstance.$cancelLink) {
             thisInstance.$cancelLink.addClass("hidden");
         }
-    }
+    };
 
     var _updateTextLines = function(thisInstance, idx, isChecked) {
         thisInstance.textLines[idx] = thisInstance.textLines[idx]
             .replace(/^[-+]/, isChecked ? "+" : "-");
-    }
+
+        if (thisInstance.options.keepSync) {
+            $(thisInstance.element).text(thisInstance.value());
+        }
+    };
+
+    var _notifyChange = function(thisInstance) {
+        if (thisInstance.options.onChange) {
+            thisInstance.options.onChange();
+        }
+    };
 
     // The actual plugin constructor
     function Plugin(el, opts) {
@@ -141,23 +180,24 @@
 
         this.textLines = [];
 
-        this.$inputWrapper;
-        this.$checklist;
-        this.$editLink;
-        this.$saveLink;
-        this.$cancelLink;
+        this.$inputWrapper = undefined;
+        this.$checklist = undefined;
+        this.$editLink = undefined;
+        this.$saveLink = undefined;
+        this.$cancelLink = undefined;
 
         this.init();
-    };
+    }
 
     Plugin.prototype = {
         // Plugin initialization
         init: function() {
             var _this = this,
-                $el = $(_this.element);
+                $el = $(_this.element),
+                checklists;
 
-            if (!$el.is("textarea") && !$el.is("input:text")) {
-                throw "This is only applicable to input[type='text'] or textarea";
+            if (!$el.is("textarea")) {
+                throw "This is only applicable to textarea";
             }
 
             _this.$container = $([
@@ -178,7 +218,7 @@
             _this.$saveLink = _this.$container.find('.js-save');
             _this.$cancelLink = _this.$container.find('.js-cancel');
 
-            _this.$checklist.html(_parseTextAndBuildHtml(_this));
+            _parseTextAndSetHtml(_this);
 
             // Replace the current html element
             // with the new html
@@ -192,7 +232,8 @@
 
                 _this.$saveLink.on('click', function() {
                     _persistEditorChanges(_this, function() {
-                        _this.$checklist.html(_parseTextAndBuildHtml(_this))
+                        _parseTextAndSetHtml(_this);
+                        _notifyChange(_this);
                     })
                 });
 
@@ -216,6 +257,7 @@
                         isChecked = $checkbox.is(":checked");
 
                     _updateTextLines(_this, $checkbox.data("idx"), isChecked);
+                    _notifyChange(_this);
                 });
             }
 

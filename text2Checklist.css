@@ -24,7 +24,32 @@
 }
 
 .txt2chkl .entry {
+    margin-bottom: 5px;
     margin-left: 10px;
+}
+
+.txt2chkl label {
+    display: block;
+    padding-left: 15px;
+    text-indent: -17px;
+}
+
+.txt2chkl ul{
+    margin:0;
+    padding:0;
+    padding-left: 17px;
+}
+
+.txt2chkl input[type="checkbox"] {
+    padding: 0;
+    margin:0;
+
+    width: 13px;
+    height: 13px;
+
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
 }
 
 .txt2chkl .actions > * {
@@ -33,5 +58,5 @@
 
 .txt2chkl .link {
     cursor: pointer;
-    text-transform: capitalcase;
+    text-transform: capitalize;
 }
