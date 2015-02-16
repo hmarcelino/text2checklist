@@ -172,6 +172,16 @@
 
     // The actual plugin constructor
     function Plugin(el, opts) {
+        var dataProps = $(el).data();
+
+        if (dataProps['checkable'] !== undefined) {
+            opts.actions.canCheck = (dataProps['checkable'] + "") === "true";
+        }
+
+        if (dataProps['editable'] !== undefined) {
+            opts.actions.canEdit = (dataProps['editable'] + "") === "true";
+        }
+
         this.element = el;
 
         this.options = $.extend({}, defaults, opts);
