@@ -5,17 +5,16 @@
     var defaults = {
         keepSync: true,
 
+        canEdit: true,
+        canCheck: true,
+        onChange: undefined,
+
         buttons: {
             edit: "Edit",
-            save: "Ok"
-        },
 
-        actions: {
-            canEdit: true,
-            canCheck: true
-        },
-
-        onChange: undefined
+            save: "Ok",
+            cancel: "Cancel"
+        }
     };
 
     var _getUniqueId = function() {
@@ -31,10 +30,10 @@
             // Don't capture the first '*' from a
             // bold text inside a bullet point
             //
-            // Ex: * *Bullet point 1*
+            // Ex: * **Bullet point 1**
             //   should return * <strong>Bullet point 1</strong>
             //
-            return text.replace(/\*([^\s].+)\*/, "<strong>$1</strong>");
+            return text.replace(/\*\*([^\s].+)\*\*/, "<strong>$1</strong>");
         };
 
         line = applyBoldIfRequired(line);
@@ -48,7 +47,7 @@
                 "   <label for='" + uniqueId + "'>",
                 "       <input id='" + uniqueId + "' type='checkbox' data-idx='" + idx + "' "
                 + (line.indexOf("+") === 0 ? "checked='checked'" : "")
-                + (!thisInstance.options.actions["canCheck"] ? "disabled='disabled'" : "")
+                + (!thisInstance.options["canCheck"] ? "disabled='disabled'" : "")
                 + "' >",
                 "     " + label + "",
                 "   </label>",
@@ -174,17 +173,18 @@
     function Plugin(el, opts) {
         var dataProps = $(el).data();
 
-        if (dataProps['checkable'] !== undefined) {
-            opts.actions.canCheck = (dataProps['checkable'] + "") === "true";
-        }
-
-        if (dataProps['editable'] !== undefined) {
-            opts.actions.canEdit = (dataProps['editable'] + "") === "true";
-        }
-
         this.element = el;
 
         this.options = $.extend({}, defaults, opts);
+
+        if (dataProps['checkable'] !== undefined) {
+            this.options['canCheck'] = (dataProps['checkable'] + "") === "true";
+        }
+
+        if (dataProps['editable'] !== undefined) {
+            this.options['canEdit'] = (dataProps['editable'] + "") === "true";
+        }
+
         this._defaults = defaults;
         this._name = pluginName;
 
@@ -235,7 +235,7 @@
             _this.$container.insertAfter($el);
             $el.appendTo(_this.$inputWrapper);
 
-            if (_this.options.actions['canEdit']) {
+            if (_this.options['canEdit']) {
                 _this.$editLink.on('click', function() {
                     _editInPlace(_this)
                 });
@@ -247,20 +247,16 @@
                     })
                 });
 
-                if (_this.options.buttons['cancel']) {
-                    _this.$cancelLink.on('click', function() {
-                        _cancelEditorChanges(_this);
-                    });
+                _this.$cancelLink.on('click', function() {
+                    _cancelEditorChanges(_this);
+                });
 
-                } else {
-                    _this.$container.find(".js-cancel").remove();
-                }
 
             } else {
                 _this.$container.find(".js-edit").remove();
             }
 
-            if (_this.options.actions['canCheck']) {
+            if (_this.options['canCheck']) {
                 _this.$checklist.on("change", "*[type='checkbox']", function() {
                     var $checkbox = $(this),
                         idx = $checkbox.data("idx"),

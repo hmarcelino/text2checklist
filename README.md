@@ -1,6 +1,6 @@
 ## Text 2 Checklist
 
-A plugin that will build a checklist from a text
+A plugin that will build a checklist from the text of a textarea.
 
 If the line starts with a '-' it will add a unchecked checkbox. otherwise of the line starts with a '+' it will add a checked checkbox.
 
@@ -26,7 +26,7 @@ See demo!
 
 #### Options:
 
-* `canEdit`: If the user can edit the checkable content
+* `canEdit`: If the user can change the text of the textarea.
 
 * `canCheck`: If the checklist is enabled
 
