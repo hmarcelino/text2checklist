@@ -4,7 +4,7 @@ A plugin that will build a checklist from the text of a textarea.
 
 If the line starts with a '-' it will add a unchecked checkbox. otherwise of the line starts with a '+' it will add a checked checkbox.
 
-See demo!
+See [demo](http://hmarcelino.github.io/text2checklist)!
 
 ## API
 
