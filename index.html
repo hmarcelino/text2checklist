@@ -1,91 +1,161 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Text2checklist by hmarcelino</title>
+    <!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>Text2checklist by hmarcelino</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>Text2checklist</h1>
-        <p>Generates a list of checkboxes from the content of a textarea</p>
+        <link rel="stylesheet" href="stylesheets/styles.css">
+        <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-        <p class="view"><a href="https://github.com/hmarcelino/text2checklist">View the Project on GitHub <small>hmarcelino/text2checklist</small></a></p>
+        <link rel="stylesheet" type="text/css" href="stylesheets/index.css"></link>
+        <link rel="stylesheet" type="text/css" href="text2checklist.css"></link>
+
+        <script src="javascripts/scale.fix.js"></script>
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="text2checklist.js"></script>
+
+      </head>
+
+      <body>
+          <div class="hm-header">
+            <h1>Text2Checklist</h1>
+            <p>Generates a list of checkboxes from the content of a textarea</p>
+
+            <ul>
+                <li><a href="https://github.com/hmarcelino/text2checklist/zipball/master">Download ZIP File</a></li>
+                <li><a href="https://github.com/hmarcelino/text2checklist/tarball/master">Download TAR Ball</a></li>
+                <li><a href="https://github.com/hmarcelino/text2checklist">View On GitHub</a></li>
+            </ul>
+        </div>
+
+        <div class="hm-body">
+
+          <p>A plugin that will build a checklist from the text of a textarea.</p>
+          <p>If the line starts with a '-' it will add a unchecked checkbox. otherwise of the line starts with a '+' it will add a checked checkbox.</p>
 
 
-        <ul>
-          <li><a href="https://github.com/hmarcelino/text2checklist/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/hmarcelino/text2checklist/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/hmarcelino/text2checklist">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h2>
-<a id="text-2-checklist" class="anchor" href="#text-2-checklist" aria-hidden="true"><span class="octicon octicon-link"></span></a>Text 2 Checklist</h2>
+          <!-- SAMPLE 1 -->
 
-<p>A plugin that will build a checklist from the text of a textarea.</p>
+          <div>
+              <h2><a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>Sample: Simple Initialization</h2>
+              <div class="highlight highlight-html"><pre>
+&lt;<span class="ent">textarea</span> <span class="e">class</span>=<span class="s"><span class="pds">"</span>js-text-to-checklist<span class="pds">"</span></span>
+      <span class="e">data-editable</span>=<span class="s"><span class="pds">"</span>false<span class="pds">"</span></span>
+      <span class="e">data-checkable</span>=<span class="s"><span class="pds">"</span>true<span class="pds">"</span></span>&gt;
+      **Bold header**
 
-<p>If the line starts with a '-' it will add a unchecked checkbox. otherwise of the line starts with a '+' it will add a checked checkbox.</p>
+      Placeholder text. Fusce congue magna id eros malesuada
+      - **Strong bullet point 1**
+      - **Strong bullet point 1**
+&lt;/<span class="pl-ent">textarea&gt;</span>
 
-<p>See demo!</p>
+&lt;script type="text/javascript"&gt;
+    $(document).ready(function(){
+        $(".js-text-to-checklist").text2Checklist();
+    });
+&lt;/script&gt;
 
-<h2>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
+</pre></div>
 
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">textarea</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>js-text-to-checklist<span class="pl-pds">"</span></span>
-    <span class="pl-e">data-editable</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>
-    <span class="pl-e">data-checkable</span>=<span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>&gt;
-    **Bold header**
+            <div class="hm-sample">
+                <textarea class="sample1"
+                data-editable="false"
+                data-checkable="true">
+                    **Bold header**
 
+                    Placeholder text. Fusce congue magna id eros malesuada
+                    - **Strong bullet point 1**
+                    - **Strong bullet point 1**
+                </textarea>
+
+                <script type="text/javascript">
+                  $(document).ready(function(){
+                      $(".sample1").text2Checklist();
+                  });
+                </script>
+            </div>
+        </div>
+
+        <!-- END SAMPLE 1 -->
+
+        <br/>
+        <br/>
+
+        <!-- SAMPLE 2 -->
+
+        <div>
+            <h2><a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>Sample: Allowed Edit</h2>
+            <div class="highlight highlight-html"><pre>
+&lt;<span class="ent">textarea</span> <span class="e">class</span>=<span class="s"><span class="pds">"</span>js-text-to-checklist<span class="pds">"</span></span>&gt;
     Placeholder text. Fusce congue magna id eros malesuada
-    - **Strong bullet point 1**
-    - **Strong bullet point 1**
-&lt;/<span class="pl-ent">textarea</span></pre></div>
+    + Checked option 1
+    - unchecked option 2
+&lt;/<span class="pl-ent">textarea&gt;</span>
 
-<h4>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage:</h4>
+&lt;script type="text/javascript"&gt;
+  $(document).ready(function(){
+      $(".js-text-to-checklist").text2Checklist({canEdit: true, canCheck:true});
+  });
+&lt;/script&gt;
 
-<p><code>$(".js-text-to-checklist").text2Checklist(opts);</code></p>
+</pre></div>
 
-<h4>
-<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options:</h4>
+          <div class="hm-sample">
+              <textarea class="sample2">
+                  Placeholder text. Fusce congue magna id eros malesuada
+                  + Checked option 1
+                  - unchecked option 2
+              </textarea>
 
-<ul>
-<li><p><code>canEdit</code>: If the user can change the text of the textarea.</p></li>
-<li><p><code>canCheck</code>: If the checklist is enabled</p></li>
-<li><p><code>onChange</code>: Function that will be called when the text changes</p></li>
-</ul>
+              <script type="text/javascript">
+                $(document).ready(function(){
+                    $(".sample2").text2Checklist({canEdit: true, canCheck:true});
+                });
+              </script>
+          </div>
+        </div>
 
-<h4>
-<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods:</h4>
 
-<ul>
-<li><p><code>text2Checklist('init')</code>: Initialize the plugin. This is done when creating a new instance of text2Checklist</p></li>
-<li><p><code>text2Checklist('value')</code>: Returns the current text value</p></li>
-<li><p><code>text2Checklist('destroy')</code>: Destroy this instance of text2Checklist.</p></li>
-</ul>
+        <!-- END SAMPLE 2 -->
 
-<h3>
-<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements:</h3>
+        <h4>
+        <h2><a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
 
-<ul>
-<li>Jquery &gt; 1.10</li>
-</ul>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/hmarcelino">hmarcelino</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+        <h4>
+        <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage:</h4>
+        <p><code>$(".js-text-to-checklist").text2Checklist(opts);</code></p>
+
+        <h4>
+        <a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options:</h4>
+        <ul>
+            <li><p><code>canEdit</code>: If the user can change the text of the textarea.</p></li>
+            <li><p><code>canCheck</code>: If the checklist is enabled</p></li>
+            <li><p><code>onChange</code>: Function that will be called when the text changes</p></li>
+        </ul>
+
+        <h4>
+        <a id="methods" class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods:</h4>
+        <ul>
+            <li><p><code>text2Checklist('init')</code>: Initialize the plugin. This is done when creating a new instance of text2Checklist</p></li>
+            <li><p><code>text2Checklist('value')</code>: Returns the current text value</p></li>
+            <li><p><code>text2Checklist('destroy')</code>: Destroy this instance of text2Checklist.</p></li>
+        </ul>
+
+        <h3>
+        <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements:</h3>
+        <ul>
+            <li>Jquery &gt; 1.10</li>
+        </ul>
+
+        </div>
+
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+
+</body>
 </html>

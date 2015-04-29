@@ -1,0 +1,34 @@
+body {
+    margin:0;
+    padding:0;
+    font-size: 12px;
+    font-family: "trebuchet ms", Verdana, arial, sans-serif;
+}
+
+.hm-header, .hm-body {
+    padding: 20px;
+}
+
+.hm-header {
+    padding-bottom: 10px;
+
+    background-color: #333;
+    color: white;
+}
+
+.hm-header h1 {
+    color: white;
+}
+
+.hm-header strong{
+    color: white;
+}
+
+.hm-sample {
+    padding: 8px 15px;
+    background: #f8f8f8;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    overflow-x: auto;
+}
