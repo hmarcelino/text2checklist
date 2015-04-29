@@ -17,7 +17,7 @@ See [demo](http://hmarcelino.github.io/text2checklist)!
 	Placeholder text. Fusce congue magna id eros malesuada
 	- **Strong bullet point 1**
 	- **Strong bullet point 1**
-</textarea
+</textarea>
 ```
 
 #### Usage:
